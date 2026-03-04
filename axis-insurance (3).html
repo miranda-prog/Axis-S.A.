@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIS — Aseguradora | BIANCAJO, S.A.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --navy-deep:    #050E1C;
+  --navy-dark:    #0A192F;
+  --navy-mid:     #112240;
+  --navy-light:   #1D3461;
+  --gold-bright:  #C5A059;
+  --gold-light:   #DEC07A;
+  --gold-pale:    #F0D9A0;
+  --gold-dim:     #8A6B35;
+  --white:        #F8F4EE;
+  --white-muted:  #C8C2B8;
+  --white-dim:    #6B6560;
+  --glass-bg:     rgba(17,34,64,0.55);
+  --glass-border: rgba(197,160,89,0.18);
+  --shadow-gold:  0 8px 48px rgba(197,160,89,0.15);
+  --radius-sm:    8px;
+  --radius-md:    16px;
+  --radius-lg:    28px;
+  --font-d: 'Cormorant Garamond', serif;
+  --font-b: 'DM Sans', sans-serif;
+  --font-i: 'Bebas Neue', sans-serif;
+  --tr: 0.45s cubic-bezier(0.16,1,0.3,1);
+  --tr-f: 0.22s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ===== RESET ===== */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-b); background: var(--navy-deep); color: var(--white); overflow-x: hidden; cursor: none; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--navy-deep); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
+
+/* ===== CURSOR ===== */
+#cdot { width: 8px; height: 8px; background: var(--gold-bright); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+#cring { width: 36px; height: 36px; border: 1.5px solid rgba(197,160,89,0.5); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.18s ease; }
+
+/* ===== NAV ===== */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 5vw; display: flex; align-items: center; justify-content: space-between; transition: background var(--tr), padding var(--tr); }
+nav.scrolled { background: rgba(5,14,28,0.93); backdrop-filter: blur(20px); padding: 14px 5vw; border-bottom: 1px solid var(--glass-border); }
+.nav-logo { font-family: var(--font-i); font-size: 2rem; letter-spacing: 0.12em; color: var(--gold-bright); text-decoration: none; }
+.nav-logo span { display: block; color: var(--white); font-size: 0.82rem; font-family: var(--font-b); font-weight: 300; letter-spacing: 0.18em; line-height: 1; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { color: var(--white-muted); text-decoration: none; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; transition: color var(--tr-f); position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--gold-bright); transition: width var(--tr-f); }
+.nav-links a:hover { color: var(--gold-light); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta { background: linear-gradient(135deg, var(--gold-bright), var(--gold-dim)); color: var(--navy-deep); padding: 10px 24px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border: none; transition: all var(--tr-f); text-decoration: none; }
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(197,160,89,0.35); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { display: block; width: 24px; height: 1.5px; background: var(--gold-bright); transition: all 0.3s; }
+
+/* ===== MOBILE MENU ===== */
+.mob-menu { position: fixed; inset: 0; z-index: 99; background: rgba(5,14,28,0.97); backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+.mob-menu.open { transform: translateX(0); }
+.mob-menu a { font-family: var(--font-d); font-size: 2.5rem; color: var(--white); text-decoration: none; transition: color var(--tr-f); }
+.mob-menu a:hover { color: var(--gold-bright); }
+
+/* ===== HERO ===== */
+#hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding: 120px 5vw 80px; }
+.hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 80% 80% at 65% 50%, rgba(197,160,89,0.06) 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 10% 80%, rgba(29,52,97,0.4) 0%, transparent 60%), linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-dark) 50%, var(--navy-deep) 100%); }
+.hero-grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(197,160,89,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(197,160,89,0.04) 1px, transparent 1px); background-size: 60px 60px; animation: gridShift 20s linear infinite; }
+@keyframes gridShift { from { transform: translateY(0); } to { transform: translateY(60px); } }
+.hero-orb { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: min(42vw,520px); height: min(42vw,520px); border-radius: 50%; z-index: 1; background: radial-gradient(circle at 35% 35%, rgba(197,160,89,0.22) 0%, rgba(197,160,89,0.06) 40%, transparent 70%); border: 1px solid rgba(197,160,89,0.12); animation: orbFloat 8s ease-in-out infinite; display: flex; align-items: center; justify-content: center; }
+.hero-orb::before { content: ''; position: absolute; inset: 20px; border-radius: 50%; border: 1px solid rgba(197,160,89,0.08); }
+.hero-orb::after { content: ''; position: absolute; inset: 50px; border-radius: 50%; border: 1px dashed rgba(197,160,89,0.12); animation: orbSpin 20s linear infinite; }
+@keyframes orbFloat { 0%,100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-52%) scale(1.02); } }
+@keyframes orbSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.orb-lbl { position: relative; z-index: 2; text-align: center; font-family: var(--font-i); color: var(--gold-bright); }
+.orb-lbl .big { font-size: clamp(3rem,7vw,7rem); line-height: 1; }
+.orb-lbl .small { font-size: clamp(0.6rem,1.2vw,1rem); letter-spacing: 0.25em; color: var(--gold-pale); opacity: 0.7; }
+.hero-content { position: relative; z-index: 2; max-width: 600px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.25); border-radius: 100px; padding: 6px 16px; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 2rem; }
+.hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); animation: pulse 2s ease infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+.hero-title { font-family: var(--font-d); font-size: clamp(2.8rem,6vw,5.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem; }
+.hero-title em { font-style: italic; color: var(--gold-bright); }
+.hero-title strong { font-weight: 700; display: block; }
+.hero-sub { font-size: clamp(0.9rem,1.5vw,1.05rem); color: var(--white-muted); font-weight: 300; line-height: 1.8; margin-bottom: 2.5rem; max-width: 460px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+.btn-p { background: linear-gradient(135deg, var(--gold-bright), var(--gold-dim)); color: var(--navy-deep); padding: 16px 36px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all var(--tr-f); }
+.btn-p:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(197,160,89,0.4); }
+.btn-s { background: transparent; color: var(--white); padding: 16px 36px; border-radius: 4px; font-weight: 500; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all var(--tr-f); }
+.btn-s:hover { border-color: var(--gold-bright); color: var(--gold-light); }
+.hero-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.07); flex-wrap: wrap; }
+.stat-num { font-family: var(--font-i); font-size: 2.2rem; color: var(--gold-bright); letter-spacing: 0.05em; }
+.stat-lbl { font-size: 0.72rem; color: var(--white-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+
+/* ===== SECTIONS COMMON ===== */
+section { padding: clamp(60px,10vw,120px) 5vw; position: relative; }
+.sec-label { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+.sec-label::before { content: ''; width: 24px; height: 1px; background: var(--gold-bright); }
+.sec-title { font-family: var(--font-d); font-size: clamp(2rem,4vw,3.5rem); font-weight: 300; line-height: 1.15; margin-bottom: 1.5rem; }
+.sec-title em { font-style: italic; color: var(--gold-light); }
+.divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(197,160,89,0.2), transparent); }
+
+/* ===== REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+
+/* ===== LEADERSHIP ===== */
+#leadership { background: var(--navy-dark); }
+.bento-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-top: 3rem; }
+.lcard { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem 1.5rem; position: relative; overflow: hidden; cursor: pointer; transition: all var(--tr); }
+.lcard::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(197,160,89,0.08), transparent 60%); opacity: 0; transition: opacity var(--tr); }
+.lcard:hover { transform: translateY(-6px); border-color: rgba(197,160,89,0.4); box-shadow: var(--shadow-gold); }
+.lcard:hover::before { opacity: 1; }
+.lavatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--navy-light), var(--navy-mid)); border: 2px solid var(--gold-dim); display: flex; align-items: center; justify-content: center; font-family: var(--font-d); font-size: 1.6rem; font-weight: 600; color: var(--gold-bright); margin-bottom: 1.2rem; transition: all var(--tr); }
+.lcard:hover .lavatar { border-color: var(--gold-bright); box-shadow: 0 0 24px rgba(197,160,89,0.3); }
+.lname { font-family: var(--font-d); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.3rem; }
+.lrole { font-size: 0.75rem; color: var(--gold-light); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+.ldesc { font-size: 0.82rem; color: var(--white-muted); line-height: 1.7; margin-bottom: 1.2rem; }
+.lnum { position: absolute; top: 1.2rem; right: 1.5rem; font-family: var(--font-i); font-size: 3.5rem; color: rgba(197,160,89,0.06); line-height: 1; transition: color var(--tr); }
+.lcard:hover .lnum { color: rgba(197,160,89,0.12); }
+.llink { display: inline-flex; align-items: center; gap: 6px; color: var(--gold-bright); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; opacity: 0; transform: translateY(6px); transition: all var(--tr); }
+.lcard:hover .llink { opacity: 1; transform: translateY(0); }
+
+/* ===== CAPITAL ===== */
+#capital { background: var(--navy-deep); overflow: hidden; }
+.cap-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: center; margin-top: 3rem; }
+.cap-amount { font-family: var(--font-i); font-size: clamp(3rem,7vw,6rem); color: var(--gold-bright); line-height: 1; margin-bottom: 0.5rem; letter-spacing: 0.02em; }
+.cap-currency { font-size: 1rem; color: var(--gold-dim); font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; }
+.cap-desc { margin-top: 1.5rem; color: var(--white-muted); font-size: 0.9rem; line-height: 1.8; }
+.cap-res { display: inline-flex; align-items: center; gap: 8px; margin-top: 1.5rem; background: rgba(197,160,89,0.08); border: 1px solid rgba(197,160,89,0.2); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 0.78rem; color: var(--gold-light); letter-spacing: 0.1em; }
+.cap-kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 2rem; }
+.kpi { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.2rem; text-align: center; transition: all var(--tr); }
+.kpi:hover { border-color: rgba(197,160,89,0.35); transform: translateY(-3px); }
+.kpi-val { font-family: var(--font-i); font-size: 1.8rem; color: var(--gold-bright); }
+.kpi-lbl { font-size: 0.7rem; color: var(--white-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+.chart-box { padding: 2rem; background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); }
+.chart-ttl { font-size: 0.75rem; color: var(--white-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
+canvas#cap-chart { width: 100% !important; display: block; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.5rem; }
+.leg-item { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--white-muted); }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ===== TRANSPARENCY ===== */
+#transparency { background: var(--navy-dark); }
+.doc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 3rem; }
+.dcard { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem; position: relative; overflow: hidden; transition: all var(--tr); cursor: pointer; }
+.dcard::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold-bright), var(--gold-dim)); transform: scaleX(0); transform-origin: left; transition: transform var(--tr); }
+.dcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-gold); border-color: rgba(197,160,89,0.35); }
+.dcard:hover::after { transform: scaleX(1); }
+.dicon { width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 1.4rem; transition: all var(--tr); }
+.dcard:hover .dicon { background: rgba(197,160,89,0.2); }
+.dname { font-family: var(--font-d); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+.dmeta { font-size: 0.78rem; color: var(--white-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.dbtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid var(--gold-dim); color: var(--gold-light); padding: 10px 20px; border-radius: 4px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all var(--tr-f); width: 100%; font-family: var(--font-b); }
+.dbtn:hover { background: rgba(197,160,89,0.12); border-color: var(--gold-bright); color: var(--gold-pale); }
+
+/* ===== SIMULATOR ===== */
+#simulator { background: var(--navy-deep); }
+.sim-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; align-items: start; }
+.sim-form { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 2.5rem; }
+.sim-progress { display: flex; gap: 4px; margin-bottom: 2rem; }
+.ps { flex: 1; height: 3px; border-radius: 2px; background: rgba(197,160,89,0.15); transition: background var(--tr); }
+.ps.on { background: var(--gold-bright); }
+.fg { margin-bottom: 1.5rem; }
+.flbl { display: block; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 8px; }
+.finput, .fsel { width: 100%; background: rgba(10,25,47,0.6); border: 1px solid rgba(197,160,89,0.2); border-radius: var(--radius-sm); color: var(--white); padding: 12px 16px; font-family: var(--font-b); font-size: 0.9rem; transition: border-color var(--tr-f); outline: none; -webkit-appearance: none; appearance: none; }
+.finput:focus, .fsel:focus { border-color: var(--gold-bright); box-shadow: 0 0 0 3px rgba(197,160,89,0.1); }
+.finput::placeholder { color: var(--white-dim); }
+.fsel option { background: var(--navy-dark); color: var(--white); }
+.ferr { font-size: 0.72rem; color: #f06060; margin-top: 4px; display: none; }
+.fg.err .ferr { display: block; }
+.fg.err .finput, .fg.err .fsel { border-color: #f06060; }
+.fg.ok .finput, .fg.ok .fsel { border-color: #5cb85c; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sim-preview { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 2.5rem; position: sticky; top: 100px; }
+.pre-lbl { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 1.5rem; }
+.rph { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 280px; gap: 1rem; color: var(--white-dim); text-align: center; }
+.rph svg { width: 48px; height: 48px; opacity: 0.3; }
+.rph p { font-size: 0.85rem; }
+#receipt { display: none; background: var(--navy-dark); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2rem; position: relative; overflow: hidden; animation: fadeUp 0.5s ease forwards; }
+#receipt::before { content: 'AXIS'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-30deg); font-family: var(--font-i); font-size: 8rem; color: rgba(197,160,89,0.04); pointer-events: none; white-space: nowrap; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.r-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed rgba(197,160,89,0.2); }
+.r-logo { font-family: var(--font-i); font-size: 1.8rem; color: var(--gold-bright); }
+.r-badge { background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.3); border-radius: 100px; padding: 4px 12px; font-size: 0.7rem; color: #6EE86E; letter-spacing: 0.1em; }
+.rrow { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; font-size: 0.82rem; gap: 10px; }
+.rrow .rl { color: var(--white-dim); flex-shrink: 0; }
+.rrow .rv { color: var(--white); font-weight: 500; text-align: right; }
+.rrow.tot { padding-top: 1rem; margin-top: 0.5rem; border-top: 1px solid rgba(197,160,89,0.2); }
+.rrow.tot .rl { font-weight: 600; color: var(--white); }
+.rrow.tot .rv { font-family: var(--font-i); font-size: 1.4rem; color: var(--gold-bright); }
+.r-id { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(197,160,89,0.15); }
+.r-id-lbl { font-size: 0.7rem; color: var(--white-dim); letter-spacing: 0.12em; text-transform: uppercase; }
+.r-id-val { font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--gold-light); margin-top: 4px; word-break: break-all; }
+.r-actions { display: flex; gap: 10px; margin-top: 1.5rem; }
+.rbtn { flex: 1; padding: 10px; border-radius: 4px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all var(--tr-f); font-family: var(--font-b); }
+.rbtn-print { background: rgba(197,160,89,0.15); border: 1px solid var(--gold-dim); color: var(--gold-light); }
+.rbtn-print:hover { background: rgba(197,160,89,0.25); }
+.rbtn-new { background: linear-gradient(135deg, var(--gold-bright), var(--gold-dim)); color: var(--navy-deep); font-weight: 700; border: none; }
+.rbtn-new:hover { box-shadow: 0 4px 16px rgba(197,160,89,0.3); }
+
+/* ===== MODAL ===== */
+.overlay { position: fixed; inset: 0; z-index: 200; background: rgba(5,14,28,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; }
+.overlay.open { opacity: 1; pointer-events: all; }
+.mbox { background: var(--navy-mid); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 3rem; max-width: 560px; width: 100%; transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); position: relative; }
+.overlay.open .mbox { transform: scale(1) translateY(0); }
+.mclose { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--white-dim); font-size: 1.4rem; cursor: pointer; line-height: 1; transition: color var(--tr-f); }
+.mclose:hover { color: var(--gold-bright); }
+.micon { font-size: 3rem; margin-bottom: 1rem; }
+.mtitle { font-family: var(--font-d); font-size: 1.8rem; font-weight: 600; margin-bottom: 0.5rem; }
+.msub { color: var(--gold-light); font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.mbody { color: var(--white-muted); font-size: 0.88rem; line-height: 1.8; }
+.mtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
+.mtag { background: rgba(197,160,89,0.1); border: 1px solid rgba(197,160,89,0.2); border-radius: 100px; padding: 4px 12px; font-size: 0.72rem; color: var(--gold-light); letter-spacing: 0.1em; }
+.mfooter { margin-top: 2rem; display: flex; gap: 12px; }
+
+/* ===== FOOTER ===== */
+footer { background: var(--navy-deep); border-top: 1px solid rgba(197,160,89,0.12); padding: 4rem 5vw 2rem; }
+.ft-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.ft-brand-name { font-family: var(--font-i); font-size: 2.5rem; color: var(--gold-bright); }
+.ft-brand-sub { font-size: 0.72rem; color: var(--white-dim); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+.ft-desc { font-size: 0.82rem; color: var(--white-muted); line-height: 1.8; max-width: 280px; }
+.ft-col-ttl { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 1.2rem; }
+.ft-links { list-style: none; }
+.ft-links li { margin-bottom: 0.6rem; }
+.ft-links a { color: var(--white-muted); text-decoration: none; font-size: 0.82rem; transition: color var(--tr-f); }
+.ft-links a:hover { color: var(--gold-light); }
+.ft-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; padding-top: 2rem; }
+.ft-copy { font-size: 0.75rem; color: var(--white-dim); line-height: 1.6; }
+.ft-sec { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.sec-badge { display: flex; align-items: center; gap: 8px; background: rgba(197,160,89,0.06); border: 1px solid rgba(197,160,89,0.15); border-radius: 100px; padding: 6px 14px; font-size: 0.68rem; color: var(--white-dim); letter-spacing: 0.1em; }
+.sib-badge { background: rgba(17,34,64,0.8); border: 1px solid rgba(197,160,89,0.2); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 0.68rem; color: var(--gold-light); letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.4; }
+.sib-badge span { display: block; font-size: 0.6rem; color: var(--white-dim); }
+
+/* ===== SCROLL TOP ===== */
+#stbtn { position: fixed; bottom: 2rem; right: 2rem; z-index: 90; width: 44px; height: 44px; border-radius: 50%; background: rgba(197,160,89,0.15); border: 1px solid var(--gold-dim); color: var(--gold-bright); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--tr-f); opacity: 0; transform: translateY(10px); pointer-events: none; font-size: 1.1rem; }
+#stbtn.on { opacity: 1; transform: translateY(0); pointer-events: all; }
+#stbtn:hover { background: rgba(197,160,89,0.25); transform: translateY(-2px); }
+
+/* ===== POLIZAS & T&C ===== */
+#polizas { background: var(--navy-dark); }
+
+/* Tab switcher */
+.ptab-bar { display: flex; gap: 0; margin-top: 2.5rem; margin-bottom: 2.5rem; border: 1px solid var(--glass-border); border-radius: var(--radius-md); overflow: hidden; width: fit-content; }
+.ptab { background: transparent; border: none; color: var(--white-muted); padding: 12px 28px; font-family: var(--font-b); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all var(--tr-f); position: relative; }
+.ptab.active { background: rgba(197,160,89,0.15); color: var(--gold-light); }
+.ptab::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold-bright); transform: scaleX(0); transition: transform var(--tr-f); }
+.ptab.active::after { transform: scaleX(1); }
+.ptab:hover:not(.active) { color: var(--white); background: rgba(255,255,255,0.04); }
+
+/* Panel */
+.ppanel { display: none; animation: fadeUp 0.4s ease forwards; }
+.ppanel.active { display: block; }
+
+/* Policy cards grid */
+.policy-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.pcard { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); overflow: hidden; transition: all var(--tr); }
+.pcard:hover { transform: translateY(-5px); border-color: rgba(197,160,89,0.35); box-shadow: var(--shadow-gold); }
+.pcard-header { padding: 1.8rem 1.8rem 1.2rem; border-bottom: 1px solid rgba(197,160,89,0.12); }
+.pcard-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.pcard-name { font-family: var(--font-d); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.3rem; }
+.pcard-sub { font-size: 0.75rem; color: var(--gold-light); letter-spacing: 0.1em; text-transform: uppercase; }
+.pcard-body { padding: 1.5rem 1.8rem; }
+.pcard-price { margin-bottom: 1.2rem; }
+.pcard-price .from { font-size: 0.7rem; color: var(--white-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+.pcard-price .amount { font-family: var(--font-i); font-size: 2rem; color: var(--gold-bright); line-height: 1.1; }
+.pcard-price .period { font-size: 0.72rem; color: var(--white-dim); }
+.covers-title { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 0.6rem; margin-top: 1rem; }
+.cover-list { list-style: none; }
+.cover-list li { font-size: 0.8rem; color: var(--white-muted); padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+.cover-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.cover-list.yes li::before { background: #6EE86E; }
+.cover-list.no li::before { background: #f06060; }
+.pcard-footer { padding: 1.2rem 1.8rem 1.8rem; }
+.pcard-btn { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 4px; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: var(--font-b); font-weight: 600; text-decoration: none; transition: all var(--tr-f); background: linear-gradient(135deg,var(--gold-bright),var(--gold-dim)); color: var(--navy-deep); border: none; }
+.pcard-btn:hover { box-shadow: 0 6px 20px rgba(197,160,89,0.35); transform: translateY(-1px); }
+
+/* T&C Panel */
+.tc-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start; }
+.tc-sidebar { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.2rem; position: sticky; top: 90px; }
+.tc-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--white-muted); cursor: pointer; transition: all var(--tr-f); border: none; background: none; width: 100%; text-align: left; font-family: var(--font-b); }
+.tc-nav-item.active { background: rgba(197,160,89,0.12); color: var(--gold-light); }
+.tc-nav-item:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--white); }
+.tc-nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.tc-content { background: var(--glass-bg); backdrop-filter: blur(18px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 2.5rem; }
+.tc-panel { display: none; }
+.tc-panel.active { display: block; animation: fadeUp 0.35s ease forwards; }
+.tc-panel-title { font-family: var(--font-d); font-size: 1.8rem; font-weight: 600; margin-bottom: 0.3rem; }
+.tc-panel-sub { font-size: 0.75rem; color: var(--gold-light); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(197,160,89,0.12); }
+.tc-block { margin-bottom: 2rem; }
+.tc-block-title { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.tc-block-title::before { content: ''; width: 16px; height: 1px; background: var(--gold-bright); }
+.tc-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.tc-items li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83rem; color: var(--white-muted); line-height: 1.6; padding: 8px 12px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); }
+.tc-items li .ico { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+.tc-note { font-size: 0.75rem; color: var(--white-dim); line-height: 1.7; margin-top: 1.5rem; padding: 1rem; border: 1px solid rgba(197,160,89,0.12); border-radius: var(--radius-sm); border-left: 3px solid var(--gold-dim); }
+
+/* Tariffs table */
+.tariff-wrap { overflow-x: auto; }
+table.tariff { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.tariff th { padding: 12px 16px; text-align: left; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-light); border-bottom: 1px solid rgba(197,160,89,0.2); background: rgba(197,160,89,0.05); }
+table.tariff td { padding: 12px 16px; color: var(--white-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
+table.tariff tr:hover td { background: rgba(197,160,89,0.04); color: var(--white); }
+table.tariff .hl { color: var(--gold-bright); font-weight: 600; font-family: var(--font-i); font-size: 1rem; }
+table.tariff .badge-yes { background: rgba(76,175,80,0.15); color: #6EE86E; border: 1px solid rgba(76,175,80,0.25); border-radius: 100px; padding: 2px 10px; font-size: 0.68rem; letter-spacing: 0.08em; white-space: nowrap; }
+table.tariff .badge-no { background: rgba(240,96,96,0.12); color: #f08080; border: 1px solid rgba(240,96,96,0.2); border-radius: 100px; padding: 2px 10px; font-size: 0.68rem; letter-spacing: 0.08em; }
+
+@media (max-width: 900px) { .policy-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .ptab-bar { width: 100%; } .ptab { flex: 1; padding: 10px 10px; font-size: 0.7rem; } .tc-layout { grid-template-columns: 1fr; } .tc-sidebar { position: static; } }
+
+/* ===== EASTER EGG ===== */
+#egg-overlay { position:fixed;inset:0;z-index:500;background:rgba(5,14,28,0.92);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.35s ease; }
+#egg-overlay.open { opacity:1;pointer-events:all; }
+#egg-box { background:var(--navy-mid);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:2rem;max-width:560px;width:100%;position:relative;transform:scale(0.9) translateY(20px);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);text-align:center; }
+#egg-overlay.open #egg-box { transform:scale(1) translateY(0); }
+#egg-close { position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--white-dim);font-size:1.2rem;cursor:pointer;line-height:1;transition:color var(--tr-f);z-index:1; }
+#egg-close:hover { color:var(--gold-bright); }
+#egg-label { font-family:var(--font-i);font-size:1.6rem;color:var(--gold-bright);letter-spacing:0.1em;text-align:center;margin-bottom:1.2rem; }
+#egg-thumb { position:relative;border-radius:var(--radius-md);overflow:hidden;cursor:pointer;border:1px solid var(--glass-border);transition:transform 0.2s ease,box-shadow 0.2s ease; }
+#egg-thumb:hover { transform:scale(1.02);box-shadow:0 12px 40px rgba(197,160,89,0.25); }
+#egg-thumb img { width:100%;display:block;border-radius:var(--radius-md); }
+#egg-play { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:rgba(197,160,89,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--navy-deep);padding-left:4px;transition:background 0.2s ease; }
+#egg-thumb:hover #egg-play { background:var(--gold-bright); }
+#egg-hint { position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(5,14,28,0.85));padding:1.5rem 1rem 0.8rem;font-size:0.75rem;color:var(--white-muted);letter-spacing:0.08em; }
+#egg-msg { text-align:center;font-size:0.82rem;color:var(--white-muted);margin-top:1.2rem;line-height:1.6; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
+  .bento-grid { grid-template-columns: repeat(2,1fr); }
+  .cap-layout { grid-template-columns: 1fr; }
+  .ft-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  #cdot, #cring { display: none; }
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .hero-orb { display: none; }
+  .hero-content { max-width: 100%; }
+  .hero-stats { gap: 1.5rem; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .doc-grid { grid-template-columns: 1fr; }
+  .sim-wrap { grid-template-columns: 1fr; }
+  .sim-preview { position: static; }
+  .frow { grid-template-columns: 1fr; }
+  .cap-kpis { grid-template-columns: 1fr; }
+  .ft-top { grid-template-columns: 1fr; gap: 2rem; }
+  .ft-bottom { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="cdot"></div>
+<div id="cring"></div>
+<button id="stbtn" title="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AXIS<span>BIANCAJO, S.A.</span></a>
+  <ul class="nav-links">
+    <li><a href="#leadership">Liderazgo</a></li>
+    <li><a href="#capital">Capital</a></li>
+    <li><a href="#transparency">Transparencia</a></li>
+    <li><a href="#polizas">P&oacute;lizas</a></li>
+    <li><a href="#simulator">Simulador</a></li>
+  </ul>
+  <a href="#simulator" class="nav-cta">Obtener P&oacute;liza</a>
+  <button class="hamburger" id="hamBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mobMenu">
+  <a href="#leadership" onclick="closeMob()">Liderazgo</a>
+  <a href="#capital" onclick="closeMob()">Capital</a>
+  <a href="#transparency" onclick="closeMob()">Transparencia</a>
+  <a href="#polizas" onclick="closeMob()">P&oacute;lizas</a>
+  <a href="#simulator" onclick="closeMob()">Simulador</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb">
+    <div class="orb-lbl">
+      <div class="big">14M</div>
+      <div class="small">Capital Social</div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">Autorizada por Resoluci&oacute;n JM-89-2010</div>
+    <h1 class="hero-title">
+      AXIS:<br>
+      <em>Respaldo,</em><br>
+      <strong>Innovaci&oacute;n y Solidez</strong>
+    </h1>
+    <p class="hero-sub">Una aseguradora guatemalteca de clase mundial. Protegemos lo que m&aacute;s importa con tecnolog&iacute;a de vanguardia y un equipo de socios fundadores de alto nivel.</p>
+    <div class="hero-actions">
+      <a href="#simulator" class="btn-p">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Simular Mi P&oacute;liza
+      </a>
+      <a href="#capital" class="btn-s">Ver Capital Social &rarr;</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num" id="ctr-cap">Q0</div><div class="stat-lbl">Capital Pagado</div></div>
+      <div><div class="stat-num" id="ctr-soc">0</div><div class="stat-lbl">Socios Fundadores</div></div>
+      <div><div class="stat-num" id="ctr-yr">0</div><div class="stat-lbl">A&ntilde;os de Operaci&oacute;n</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="sec-label reveal">Equipo Directivo</div>
+  <h2 class="sec-title reveal d1">Los <em>arquitectos</em> de nuestra solidez</h2>
+  <div class="bento-grid">
+
+    <div class="lcard reveal d1">
+      <div class="lnum">01</div>
+      <div class="lavatar">AA</div>
+      <div class="lname">Abner Algua</div>
+      <div class="lrole">Socio &amp; Accionista Fundador</div>
+      <div class="ldesc">Accionista fundador de BIANCAJO, S.A. con participaci&oacute;n directa en la constituci&oacute;n de AXIS. Impulsor de la visi&oacute;n estrat&eacute;gica y crecimiento sostenible de la aseguradora.</div>
+      <a href="#" class="llink" onclick="return false;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Ver Perfil LinkedIn
+      </a>
+    </div>
+
+    <div class="lcard reveal d2">
+      <div class="lnum">02</div>
+      <div class="lavatar">AR</div>
+      <div class="lname">Andr&eacute;s Rosal</div>
+      <div class="lrole">Socio &amp; Accionista Fundador</div>
+      <div class="ldesc">Accionista fundador con aporte decisivo en la estructuraci&oacute;n del capital social de AXIS. Su participaci&oacute;n garantiza solidez patrimonial y gobernanza corporativa de alto nivel.</div>
+      <a href="#" class="llink" onclick="return false;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Ver Perfil LinkedIn
+      </a>
+    </div>
+
+    <div class="lcard reveal d3">
+      <div class="lnum">03</div>
+      <div class="lavatar">BM</div>
+      <div class="lname">Bigner Miranda</div>
+      <div class="lrole">Socio &amp; Accionista Fundador</div>
+      <div class="ldesc">Accionista fundador comprometido con la expansi&oacute;n operativa de AXIS. Contribuye activamente en la toma de decisiones estrat&eacute;gicas y el fortalecimiento institucional de la empresa.</div>
+      <a href="#" class="llink" onclick="return false;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Ver Perfil LinkedIn
+      </a>
+    </div>
+
+    <div class="lcard reveal d4">
+      <div class="lnum">04</div>
+      <div class="lavatar">CC</div>
+      <div class="lname">Carlo Carranza</div>
+      <div class="lrole">Socio &amp; Accionista Fundador</div>
+      <div class="ldesc">Accionista fundador cuya participaci&oacute;n fue clave en el proceso de autorizaci&oacute;n ante la Junta Monetaria y la Superintendencia de Bancos de Guatemala bajo la Resoluci&oacute;n JM-89-2010.</div>
+      <a href="#" class="llink" onclick="return false;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Ver Perfil LinkedIn
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CAPITAL -->
+<section id="capital">
+  <div class="cap-layout">
+    <div>
+      <div class="sec-label reveal">Dashboard Financiero</div>
+      <h2 class="sec-title reveal d1">Solidez de <em>capital</em> comprobada</h2>
+      <div class="cap-amount reveal d2">Q14,000,000</div>
+      <div class="cap-currency reveal d2">Quetzales &mdash; Capital Social Pagado</div>
+      <p class="cap-desc reveal d3">AXIS opera bajo la supervisi&oacute;n de la Superintendencia de Bancos de Guatemala, garantizando la m&aacute;xima transparencia y solvencia financiera para nuestros asegurados.</p>
+      <div class="cap-res reveal d3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Resoluci&oacute;n JM-89-2010 &mdash; Junta Monetaria de Guatemala
+      </div>
+      <div class="cap-kpis reveal d4">
+        <div class="kpi"><div class="kpi-val">AAA</div><div class="kpi-lbl">Calificaci&oacute;n</div></div>
+        <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-lbl">Regulado SIB</div></div>
+        <div class="kpi"><div class="kpi-val">15+</div><div class="kpi-lbl">A&ntilde;os Solvente</div></div>
+      </div>
+    </div>
+    <div class="chart-box reveal d2">
+      <div class="chart-ttl">Distribuci&oacute;n de Capital Social &mdash; AXIS BIANCAJO, S.A.</div>
+      <canvas id="cap-chart" height="260"></canvas>
+      <div class="chart-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#C5A059"></div>Capital Pagado</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#1D3461"></div>Reservas T&eacute;cnicas</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2A4A7A"></div>Inversiones</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#8A6B35"></div>Patrimonio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TRANSPARENCY -->
+<section id="transparency">
+  <div class="sec-label reveal">Portal de Transparencia</div>
+  <h2 class="sec-title reveal d1">Documentaci&oacute;n <em>oficial</em> descargable</h2>
+  <p class="reveal d2" style="color:var(--white-muted);max-width:560px;font-size:0.9rem;line-height:1.8;margin-bottom:0">Acceso p&uacute;blico a todos nuestros documentos legales y regulatorios, en cumplimiento con la Ley de Mercado de Valores y Mercanc&iacute;as.</p>
+  <div class="doc-grid">
+    <div class="dcard reveal d1">
+      <div class="dicon">&#128203;</div>
+      <div class="dname">Edictos de Constituci&oacute;n</div>
+      <div class="dmeta">Publicaci&oacute;n oficial de constituci&oacute;n de BIANCAJO, S.A. en el Diario de Centroam&eacute;rica. Documento notarial protocolizado.</div>
+      <button class="dbtn" onclick="openModal('edictos')" style="margin-bottom:0;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Ver Informaci&oacute;n
+      </button>
+    </div>
+    <div class="dcard reveal d2">
+      <div class="dicon">&#127970;</div>
+      <div class="dname">Dictamen SIB</div>
+      <div class="dmeta">Dictamen favorable emitido por la Superintendencia de Bancos de Guatemala para operar como Aseguradora autorizada.</div>
+      <button class="dbtn" onclick="openModal('sib')" style="margin-bottom:0;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Ver Informaci&oacute;n
+      </button>
+    </div>
+    <div class="dcard reveal d3">
+      <div class="dicon">&#128220;</div>
+      <div class="dname">Patente de Comercio</div>
+      <div class="dmeta">Patente de Empresa y Patente de Sociedad emitidas por el Registro Mercantil General de la Rep&uacute;blica de Guatemala.</div>
+      <button class="dbtn" onclick="openModal('patente')" style="margin-bottom:0;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Ver Informaci&oacute;n
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- POLIZAS, TARIFAS & TERMINOS Y CONDICIONES -->
+<section id="polizas">
+  <div class="sec-label reveal">Productos &amp; Cobertura</div>
+  <h2 class="sec-title reveal d1">P&oacute;lizas, Tarifas y <em>T&eacute;rminos</em></h2>
+  <p class="reveal d2" style="color:var(--white-muted);max-width:600px;font-size:0.9rem;line-height:1.8;">Conoce en detalle cada producto, sus coberturas, exclusiones y tarifas referenciales. Toda la informaci&oacute;n est&aacute; sujeta a evaluaci&oacute;n individual del riesgo.</p>
+
+  <!-- TAB BAR -->
+  <div class="ptab-bar reveal d2">
+    <button class="ptab active" onclick="switchTab('polizas-tab')">P&oacute;lizas</button>
+    <button class="ptab" onclick="switchTab('tarifas-tab')">Tarifas</button>
+    <button class="ptab" onclick="switchTab('tc-tab')">T&eacute;rminos &amp; Condiciones</button>
+  </div>
+
+  <!-- ===== TAB: POLIZAS ===== -->
+  <div class="ppanel active" id="polizas-tab">
+    <div class="policy-grid">
+
+      <!-- DAÑOS -->
+      <div class="pcard reveal d1">
+        <div class="pcard-header">
+          <div class="pcard-icon">&#127968;</div>
+          <div class="pcard-name">Seguro de Da&ntilde;os</div>
+          <div class="pcard-sub">Patrimonio &amp; Bienes</div>
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-price">
+            <div class="from">Tasa anual desde</div>
+            <div class="amount">2.5%</div>
+            <div class="period">sobre el valor asegurado</div>
+          </div>
+          <div class="covers-title">&#10003; &nbsp;Qu&eacute; cubre</div>
+          <ul class="cover-list yes">
+            <li>Incendio, rayo y explosi&oacute;n</li>
+            <li>Da&ntilde;os por agua (tuber&iacute;as, inundaci&oacute;n)</li>
+            <li>Robo con violencia e irrupci&oacute;n</li>
+            <li>Terremotos, erupciones volc&aacute;nicas</li>
+            <li>Da&ntilde;os al contenido del inmueble</li>
+            <li>Responsabilidad civil frente a terceros</li>
+          </ul>
+          <div class="covers-title">&#10007; &nbsp;Qu&eacute; NO cubre</div>
+          <ul class="cover-list no">
+            <li>Da&ntilde;os causados intencionalmente</li>
+            <li>Desgaste natural o depreciaci&oacute;n</li>
+            <li>Bienes en tr&aacute;nsito no declarados</li>
+            <li>Sanciones, multas o penalizaciones</li>
+            <li>Guerra, terrorismo o disturbios civiles</li>
+          </ul>
+        </div>
+        <div class="pcard-footer">
+          <a href="#simulator" class="pcard-btn">Cotizar Ahora</a>
+        </div>
+      </div>
+
+      <!-- VIDA -->
+      <div class="pcard reveal d2">
+        <div class="pcard-header">
+          <div class="pcard-icon">&#10084;&#65039;</div>
+          <div class="pcard-name">Seguro de Vida</div>
+          <div class="pcard-sub">Protecci&oacute;n Personal &amp; Familiar</div>
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-price">
+            <div class="from">Tasa anual desde</div>
+            <div class="amount">1.8%</div>
+            <div class="period">sobre la suma asegurada &mdash; IVA exento</div>
+          </div>
+          <div class="covers-title">&#10003; &nbsp;Qu&eacute; cubre</div>
+          <ul class="cover-list yes">
+            <li>Fallecimiento por cualquier causa</li>
+            <li>Muerte accidental (doble indemnizaci&oacute;n)</li>
+            <li>Invalidez total y permanente</li>
+            <li>Enfermedades graves diagnosticadas</li>
+            <li>Gastos funerarios y de sepelio</li>
+            <li>Renta mensual a beneficiarios</li>
+          </ul>
+          <div class="covers-title">&#10007; &nbsp;Qu&eacute; NO cubre</div>
+          <ul class="cover-list no">
+            <li>Suicidio dentro del primer a&ntilde;o de vigencia</li>
+            <li>Participaci&oacute;n en actividades de alto riesgo no declaradas</li>
+            <li>Enfermedades preexistentes no declaradas</li>
+            <li>Actos il&iacute;citos del asegurado</li>
+            <li>Da&ntilde;os derivados de guerra o conflicto armado</li>
+          </ul>
+        </div>
+        <div class="pcard-footer">
+          <a href="#simulator" class="pcard-btn">Cotizar Ahora</a>
+        </div>
+      </div>
+
+      <!-- AUTOS -->
+      <div class="pcard reveal d3">
+        <div class="pcard-header">
+          <div class="pcard-icon">&#128663;</div>
+          <div class="pcard-name">Seguro de Autom&oacute;viles</div>
+          <div class="pcard-sub">Veh&iacute;culos &amp; Movilidad</div>
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-price">
+            <div class="from">Tasa anual desde</div>
+            <div class="amount">3.8%</div>
+            <div class="period">sobre el valor del veh&iacute;culo</div>
+          </div>
+          <div class="covers-title">&#10003; &nbsp;Qu&eacute; cubre</div>
+          <ul class="cover-list yes">
+            <li>Da&ntilde;os propios por colisi&oacute;n o vuelco</li>
+            <li>Robo total o parcial del veh&iacute;culo</li>
+            <li>Responsabilidad civil a terceros (da&ntilde;os y lesiones)</li>
+            <li>Da&ntilde;os por fen&oacute;menos naturales</li>
+            <li>Asistencia en carretera 24/7</li>
+            <li>Gastos m&eacute;dicos al conductor y ocupantes</li>
+          </ul>
+          <div class="covers-title">&#10007; &nbsp;Qu&eacute; NO cubre</div>
+          <ul class="cover-list no">
+            <li>Conducir bajo efectos de alcohol o drogas</li>
+            <li>Veh&iacute;culo no registrado o con placa vencida</li>
+            <li>Da&ntilde;os mec&aacute;nicos por falta de mantenimiento</li>
+            <li>Conductor sin licencia vigente</li>
+            <li>Uso del veh&iacute;culo en competencias o pruebas</li>
+          </ul>
+        </div>
+        <div class="pcard-footer">
+          <a href="#simulator" class="pcard-btn">Cotizar Ahora</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== TAB: TARIFAS ===== -->
+  <div class="ppanel" id="tarifas-tab">
+    <div class="tariff-wrap reveal">
+      <table class="tariff">
+        <thead>
+          <tr>
+            <th>Tipo de Seguro</th>
+            <th>Cobertura</th>
+            <th>Tasa Anual</th>
+            <th>Prima M&iacute;nima (Q)</th>
+            <th>Plazo M&aacute;x.</th>
+            <th>IVA</th>
+            <th>Descuento Multi-a&ntilde;o</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Da&ntilde;os &mdash; B&aacute;sica</strong></td>
+            <td>Incendio, Robo, Agua</td>
+            <td class="hl">2.50%</td>
+            <td>Q 250.00</td>
+            <td>5 a&ntilde;os</td>
+            <td><span class="badge-yes">12%</span></td>
+            <td>Hasta 15%</td>
+          </tr>
+          <tr>
+            <td><strong>Da&ntilde;os &mdash; Plus</strong></td>
+            <td>B&aacute;sica + S&iacute;smico + RC</td>
+            <td class="hl">3.20%</td>
+            <td>Q 450.00</td>
+            <td>5 a&ntilde;os</td>
+            <td><span class="badge-yes">12%</span></td>
+            <td>Hasta 15%</td>
+          </tr>
+          <tr>
+            <td><strong>Vida &mdash; Individual</strong></td>
+            <td>Fallecimiento, Invalidez</td>
+            <td class="hl">1.80%</td>
+            <td>Q 180.00</td>
+            <td>30 a&ntilde;os</td>
+            <td><span class="badge-no">Exento</span></td>
+            <td>Hasta 15%</td>
+          </tr>
+          <tr>
+            <td><strong>Vida &mdash; Colectivo</strong></td>
+            <td>Grupal desde 5 personas</td>
+            <td class="hl">1.20%</td>
+            <td>Q 120.00 / persona</td>
+            <td>Anual renovable</td>
+            <td><span class="badge-no">Exento</span></td>
+            <td>Negociable</td>
+          </tr>
+          <tr>
+            <td><strong>Autos &mdash; Responsabilidad Civil</strong></td>
+            <td>Da&ntilde;os a terceros</td>
+            <td class="hl">1.50%</td>
+            <td>Q 300.00</td>
+            <td>1 a&ntilde;o</td>
+            <td><span class="badge-yes">12%</span></td>
+            <td>5% fidelidad</td>
+          </tr>
+          <tr>
+            <td><strong>Autos &mdash; Todo Riesgo</strong></td>
+            <td>Da&ntilde;os propios + RC + Robo</td>
+            <td class="hl">3.80%</td>
+            <td>Q 600.00</td>
+            <td>3 a&ntilde;os</td>
+            <td><span class="badge-yes">12%</span></td>
+            <td>Hasta 15%</td>
+          </tr>
+          <tr>
+            <td><strong>Autos &mdash; Premium</strong></td>
+            <td>Todo Riesgo + Asistencia 24/7</td>
+            <td class="hl">4.50%</td>
+            <td>Q 900.00</td>
+            <td>3 a&ntilde;os</td>
+            <td><span class="badge-yes">12%</span></td>
+            <td>Hasta 15%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="reveal" style="font-size:0.75rem;color:var(--white-dim);margin-top:1.2rem;line-height:1.7;">* Tarifas referenciales sujetas a evaluaci&oacute;n del riesgo individual. Los descuentos multi-a&ntilde;o aplican seg&uacute;n el plazo contratado: 2 a&ntilde;os&nbsp;5%, 3 a&ntilde;os&nbsp;10%, 5 a&ntilde;os&nbsp;15%. Exenci&oacute;n de IVA en Seguro de Vida conforme Decreto 27-92 Art. 7.</p>
+  </div>
+
+  <!-- ===== TAB: T&C ===== -->
+  <div class="ppanel" id="tc-tab">
+    <div class="tc-layout">
+      <div class="tc-sidebar reveal d1">
+        <button class="tc-nav-item active" onclick="switchTC('tc-danos')">
+          <span class="tc-nav-dot" style="background:#C5A059"></span>Da&ntilde;os
+        </button>
+        <button class="tc-nav-item" onclick="switchTC('tc-vida')">
+          <span class="tc-nav-dot" style="background:#DEC07A"></span>Vida
+        </button>
+        <button class="tc-nav-item" onclick="switchTC('tc-autos')">
+          <span class="tc-nav-dot" style="background:#8A6B35"></span>Autom&oacute;viles
+        </button>
+      </div>
+      <div class="tc-content reveal d2">
+
+        <!-- T&C DAÑOS -->
+        <div class="tc-panel active" id="tc-danos">
+          <div class="tc-panel-title">Seguro de Da&ntilde;os</div>
+          <div class="tc-panel-sub">T&eacute;rminos, Condiciones y Exclusiones &mdash; AXIS BIANCAJO, S.A.</div>
+          <div class="tc-block">
+            <div class="tc-block-title">Objeto de la P&oacute;liza</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128196;</span>La presente p&oacute;liza cubre los bienes inmuebles y su contenido descritos en la car&aacute;tula, contra p&eacute;rdidas o da&ntilde;os materiales causados por los riesgos expresamente amparados.</li>
+              <li><span class="ico">&#128196;</span>La vigencia m&aacute;xima es de cinco (5) a&ntilde;os continuos, renovable previo acuerdo de las partes y revisi&oacute;n de condiciones.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Obligaciones del Asegurado</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#9989;</span>Declarar verazmente el valor y condiciones del bien al momento de contratar.</li>
+              <li><span class="ico">&#9989;</span>Notificar a AXIS cualquier modificaci&oacute;n estructural o cambio de uso del inmueble.</li>
+              <li><span class="ico">&#9989;</span>Reportar todo siniestro dentro de las 72 horas siguientes de ocurrido.</li>
+              <li><span class="ico">&#9989;</span>No realizar reparaciones previas sin autorizaci&oacute;n escrita de la aseguradora, salvo para limitar el da&ntilde;o.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Exclusiones Generales</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#10060;</span>Da&ntilde;os causados por dolo, negligencia grave o acto intencional del asegurado o beneficiario.</li>
+              <li><span class="ico">&#10060;</span>P&eacute;rdidas por desgaste progresivo, corrosi&oacute;n u oxidaci&oacute;n normal.</li>
+              <li><span class="ico">&#10060;</span>Da&ntilde;os ocasionados durante conflictos armados, guerras civiles, huelgas o disturbios p&uacute;blicos.</li>
+              <li><span class="ico">&#10060;</span>Multas, sanciones administrativas o penalidades de cualquier naturaleza.</li>
+              <li><span class="ico">&#10060;</span>Bienes no declarados expl&iacute;citamente en la p&oacute;liza o subvalorados en m&aacute;s de un 20%.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Proceso de Reclamaci&oacute;n</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128204;</span>Notificaci&oacute;n escrita o digital a AXIS dentro de 72 horas del siniestro.</li>
+              <li><span class="ico">&#128204;</span>Presentaci&oacute;n de inventario detallado de bienes afectados con valor de reposici&oacute;n.</li>
+              <li><span class="ico">&#128204;</span>Inspecci&oacute;n por ajustador autorizado por AXIS dentro de los 5 d&iacute;as h&aacute;biles.</li>
+              <li><span class="ico">&#128204;</span>Resoluci&oacute;n e indemnizaci&oacute;n en un plazo m&aacute;ximo de 30 d&iacute;as h&aacute;biles tras aprobaci&oacute;n.</li>
+            </ul>
+          </div>
+          <div class="tc-note">&#9432; Esta p&oacute;liza est&aacute; regida por las disposiciones de la Ley de la Actividad Aseguradora (Decreto 25-2010) y sus reglamentos. Cualquier controversia ser&aacute; resuelta conforme a la jurisdicci&oacute;n de los tribunales competentes de Guatemala.</div>
+        </div>
+
+        <!-- T&C VIDA -->
+        <div class="tc-panel" id="tc-vida">
+          <div class="tc-panel-title">Seguro de Vida</div>
+          <div class="tc-panel-sub">T&eacute;rminos, Condiciones y Exclusiones &mdash; AXIS BIANCAJO, S.A.</div>
+          <div class="tc-block">
+            <div class="tc-block-title">Objeto de la P&oacute;liza</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128196;</span>AXIS se obliga a pagar la suma asegurada a los beneficiarios designados en caso de fallecimiento del asegurado durante la vigencia de la p&oacute;liza, por cualquier causa cubierta.</li>
+              <li><span class="ico">&#128196;</span>La p&oacute;liza de vida est&aacute; exenta de IVA conforme al Art&iacute;culo 7, numeral 7, del Decreto 27-92 (Ley del IVA de Guatemala).</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Condiciones de Elegibilidad</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#9989;</span>Edad de ingreso: 18 a 65 a&ntilde;os. Renovaci&oacute;n hasta los 70 a&ntilde;os.</li>
+              <li><span class="ico">&#9989;</span>Declaraci&oacute;n de salud obligatoria al momento de la contrataci&oacute;n.</li>
+              <li><span class="ico">&#9989;</span>Para sumas aseguradas mayores a Q500,000 se requiere examen m&eacute;dico.</li>
+              <li><span class="ico">&#9989;</span>M&aacute;ximo 3 beneficiarios designados, con porcentajes que sumen 100%.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Exclusiones Espec&iacute;ficas</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#10060;</span>Suicidio ocurrido dentro de los primeros 12 meses desde la emisi&oacute;n de la p&oacute;liza.</li>
+              <li><span class="ico">&#10060;</span>Enfermedades preexistentes no declaradas en el cuestionario de salud.</li>
+              <li><span class="ico">&#10060;</span>Muerte derivada de la participaci&oacute;n en actividades de alto riesgo no declaradas (alpinismo, paracaidismo, etc.).</li>
+              <li><span class="ico">&#10060;</span>Fallecimiento bajo efecto comprobado de alcohol o sustancias controladas.</li>
+              <li><span class="ico">&#10060;</span>Actos il&iacute;citos comprobados que causen directamente la muerte del asegurado.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Pago de la Indemnizaci&oacute;n</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128204;</span>Los beneficiarios deben presentar certificado de defunci&oacute;n oficial y documentos de identidad.</li>
+              <li><span class="ico">&#128204;</span>AXIS procesar&aacute; la reclamaci&oacute;n en un plazo m&aacute;ximo de 20 d&iacute;as h&aacute;biles tras entrega de documentaci&oacute;n completa.</li>
+              <li><span class="ico">&#128204;</span>El pago se realiza en quetzales mediante transferencia bancaria o cheque certificado.</li>
+            </ul>
+          </div>
+          <div class="tc-note">&#9432; Exenci&oacute;n de IVA basada en Decreto 27-92, Art. 7 num. 7. Esta p&oacute;liza se rige por la Ley de la Actividad Aseguradora Decreto 25-2010 y la regulaci&oacute;n de la SIB Guatemala.</div>
+        </div>
+
+        <!-- T&C AUTOS -->
+        <div class="tc-panel" id="tc-autos">
+          <div class="tc-panel-title">Seguro de Autom&oacute;viles</div>
+          <div class="tc-panel-sub">T&eacute;rminos, Condiciones y Exclusiones &mdash; AXIS BIANCAJO, S.A.</div>
+          <div class="tc-block">
+            <div class="tc-block-title">Objeto de la P&oacute;liza</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128196;</span>Cubre el veh&iacute;culo automotor descrito en la car&aacute;tula contra los riesgos contratados, incluyendo da&ntilde;os materiales y responsabilidad civil frente a terceros.</li>
+              <li><span class="ico">&#128196;</span>La cobertura es v&aacute;lida en el territorio de la Rep&uacute;blica de Guatemala y, con endoso especial, en el resto de Centroam&eacute;rica.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Obligaciones del Asegurado</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#9989;</span>Mantener el veh&iacute;culo en condiciones mec&aacute;nicas &oacute;ptimas y con documentaci&oacute;n vigente.</li>
+              <li><span class="ico">&#9989;</span>Notificar todo siniestro dentro de las 24 horas de ocurrido.</li>
+              <li><span class="ico">&#9989;</span>No abandonar el veh&iacute;culo en el lugar del accidente sin resguardo o notificaci&oacute;n a AXIS.</li>
+              <li><span class="ico">&#9989;</span>Presentar denuncia policial en caso de robo dentro de las 12 horas.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Exclusiones Espec&iacute;ficas</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#10060;</span>Accidentes ocurridos mientras el conductor se encuentre bajo influencia del alcohol (0.5 g/L o m&aacute;s en sangre) o drogas.</li>
+              <li><span class="ico">&#10060;</span>Da&ntilde;os mec&aacute;nicos, el&eacute;ctricos o de desgaste no derivados de un accidente cubierto.</li>
+              <li><span class="ico">&#10060;</span>Uso del veh&iacute;culo para transporte remunerado de pasajeros sin declaraci&oacute;n previa.</li>
+              <li><span class="ico">&#10060;</span>Conductor no autorizado o sin licencia vigente al momento del siniestro.</li>
+              <li><span class="ico">&#10060;</span>Veh&iacute;culo utilizado en competencias, rallies o pruebas de velocidad.</li>
+              <li><span class="ico">&#10060;</span>Da&ntilde;os producidos fuera del territorio cubierto sin el endoso correspondiente.</li>
+            </ul>
+          </div>
+          <div class="tc-block">
+            <div class="tc-block-title">Red de Talleres Autorizados</div>
+            <ul class="tc-items">
+              <li><span class="ico">&#128295;</span>AXIS cuenta con red de talleres autorizados en los departamentos de Guatemala, Quetzaltenango, Escuintla y Chiquimula.</li>
+              <li><span class="ico">&#128295;</span>Las reparaciones fuera de la red requieren cotizaci&oacute;n previa aprobada por AXIS.</li>
+              <li><span class="ico">&#128295;</span>Asistencia en carretera disponible 24/7 al n&uacute;mero de emergencias en la car&aacute;tula de la p&oacute;liza.</li>
+            </ul>
+          </div>
+          <div class="tc-note">&#9432; Esta p&oacute;liza se rige por Decreto 25-2010 y el Reglamento de la Ley de Tr&aacute;nsito (Decreto 132-96). El valor del veh&iacute;culo se deprecia conforme a tablas oficiales vigentes de la SIB.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- SIMULATOR -->
+<section id="simulator">
+  <div class="sec-label reveal">Simulador Pro</div>
+  <h2 class="sec-title reveal d1">Calcula tu <em>prima estimada</em> en segundos</h2>
+  <p class="reveal d2" style="color:var(--white-muted);max-width:560px;font-size:0.9rem;line-height:1.8;">Herramienta de cotizaci&oacute;n instant&aacute;nea. Los valores son estimados orientativos sujetos a evaluaci&oacute;n formal del riesgo.</p>
+  <div class="sim-wrap">
+
+    <div class="sim-form reveal d2">
+      <div class="sim-progress">
+        <div class="ps on" id="ps1"></div>
+        <div class="ps" id="ps2"></div>
+        <div class="ps" id="ps3"></div>
+      </div>
+
+      <div class="fg" id="fg-nombre">
+        <label class="flbl">Nombre Completo *</label>
+        <input type="text" class="finput" id="f-nombre" placeholder="Ej. Juan P&eacute;rez Garc&iacute;a" oninput="vf('nombre')">
+        <div class="ferr">Por favor ingrese su nombre completo (m&iacute;n. 5 caracteres)</div>
+      </div>
+
+      <div class="frow">
+        <div class="fg" id="fg-dpi">
+          <label class="flbl">DPI / NIT *</label>
+          <input type="text" class="finput" id="f-dpi" placeholder="1234 56789 0101" oninput="vf('dpi')">
+          <div class="ferr">Ingrese un DPI/NIT v&aacute;lido (m&iacute;n. 8 d&iacute;gitos)</div>
+        </div>
+        <div class="fg" id="fg-email">
+          <label class="flbl">Correo Electr&oacute;nico *</label>
+          <input type="email" class="finput" id="f-email" placeholder="correo@ejemplo.com" oninput="vf('email')">
+          <div class="ferr">Ingrese un correo v&aacute;lido</div>
+        </div>
+      </div>
+
+      <div class="frow">
+        <div class="fg" id="fg-tipo">
+          <label class="flbl">Tipo de Seguro *</label>
+          <select class="fsel" id="f-tipo" onchange="vf('tipo')">
+            <option value="">Seleccionar...</option>
+            <option value="danos">Seguro de Da&ntilde;os</option>
+            <option value="vida">Seguro de Vida</option>
+            <option value="autos">Seguro de Autom&oacute;viles</option>
+          </select>
+          <div class="ferr">Seleccione un tipo de seguro</div>
+        </div>
+        <div class="fg" id="fg-valor">
+          <label class="flbl">Valor a Asegurar (Q) *</label>
+          <input type="number" class="finput" id="f-valor" placeholder="0.00" min="1000" oninput="vf('valor')">
+          <div class="ferr">M&iacute;nimo Q1,000.00</div>
+        </div>
+      </div>
+
+      <div class="fg" id="fg-plazo">
+        <label class="flbl">Plazo de Cobertura</label>
+        <select class="fsel" id="f-plazo">
+          <option value="1">1 a&ntilde;o</option>
+          <option value="2">2 a&ntilde;os (5% descuento)</option>
+          <option value="3">3 a&ntilde;os (10% descuento)</option>
+          <option value="5">5 a&ntilde;os (15% descuento)</option>
+        </select>
+      </div>
+
+      <button class="btn-p" onclick="runSim()" style="width:100%;justify-content:center;margin-top:0.5rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Generar Cotizaci&oacute;n
+      </button>
+      <p style="font-size:0.72rem;color:var(--white-dim);text-align:center;margin-top:1rem;line-height:1.6;">* Datos protegidos con cifrado AES-256. Solo para fines de cotizaci&oacute;n estimada.</p>
+    </div>
+
+    <div class="sim-preview reveal d3">
+      <div class="pre-lbl">Recibo Digital de Cotizaci&oacute;n</div>
+      <div id="rph" class="rph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <p>Complete el formulario y genere su cotizaci&oacute;n al instante.</p>
+      </div>
+      <div id="receipt">
+        <div class="r-head">
+          <div class="r-logo">AXIS</div>
+          <div class="r-badge">&#10003; COTIZACI&Oacute;N GENERADA</div>
+        </div>
+        <div id="r-body"></div>
+        <div class="r-id">
+          <div class="r-id-lbl">ID de Transacci&oacute;n</div>
+          <div class="r-id-val" id="r-txid">&mdash;</div>
+        </div>
+        <div class="r-actions">
+          <button class="rbtn rbtn-print" onclick="window.print()">&#128424; Imprimir</button>
+          <button class="rbtn rbtn-new" onclick="resetSim()">Nueva Cotizaci&oacute;n</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-brand-name">AXIS</div>
+      <div class="ft-brand-sub">BIANCAJO, S.A. &mdash; Aseguradora</div>
+      <p class="ft-desc">Protegemos su patrimonio, su vida y su futuro con m&aacute;s de una d&eacute;cada de solidez financiera respaldada por la Junta Monetaria de Guatemala.</p>
+    </div>
+    <div>
+      <div class="ft-col-ttl">Productos</div>
+      <ul class="ft-links">
+        <li><a href="#simulator">Seguro de Da&ntilde;os</a></li>
+        <li><a href="#simulator">Seguro de Vida</a></li>
+        <li><a href="#simulator">Seguro de Autom&oacute;viles</a></li>
+        <li><a href="#simulator">Seguro Colectivo</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-ttl">Legal</div>
+      <ul class="ft-links">
+        <li><a href="#transparency">Edictos</a></li>
+        <li><a href="#transparency">Dictamen SIB</a></li>
+        <li><a href="#transparency">Patente de Comercio</a></li>
+        <li><a href="#transparency">Resoluci&oacute;n JM-89-2010</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-ttl">Contacto</div>
+      <ul class="ft-links">
+        <li><a href="#">Avenida 9-00 zona 2, Interior Finca el Zapote, Ciudad de Guatemala.</a></li>
+        <li><a href="#"><span class="__cf_email__" data-cfemail="3950575f56795841504a5b5058575a585356175a5654">[email&#160;protected]</span></a></li>
+        <li><a href="#">(502) 5290-2415</a></li>
+        <li><a href="#">Lun&ndash;Vie: 8:00&ndash;17:00</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="ft-copy">
+      &copy; 2025 AXIS &mdash; BIANCAJO, S.A. Todos los derechos reservados.<br>
+      <span style="color:var(--gold-dim)">Autorizada y regulada por la Superintendencia de Bancos de Guatemala &middot; Resoluci&oacute;n JM-89-2010</span>
+    </div>
+    <div class="ft-sec">
+      <div class="sec-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Cifrado AES-256 bits
+      </div>
+      <div class="sec-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        SSL/TLS Protegido
+      </div>
+      <div class="sib-badge">SIB Guatemala<span>Supervisi&oacute;n Bancaria Oficial</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="modalOverlay">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">&times;</button>
+    <div class="micon" id="m-icon"></div>
+    <div class="mtitle" id="m-title"></div>
+    <div class="msub" id="m-sub"></div>
+    <div class="mbody" id="m-body"></div>
+    <div class="mtags" id="m-tags"></div>
+    <div class="mfooter">
+      <a class="btn-p" id="m-download" href="#" target="_blank" rel="noopener" style="font-size:0.8rem;padding:12px 24px;text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar PDF
+      </a>
+      <a class="btn-s" id="m-preview" href="#" target="_blank" rel="noopener" style="font-size:0.8rem;padding:12px 24px;text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Ver en l&iacute;nea
+      </a>
+      <button class="btn-s" onclick="closeModal()" style="font-size:0.8rem;padding:12px 20px;">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function() {
+  'use strict';
+
+  /* ---- CURSOR ---- */
+  var dot = document.getElementById('cdot');
+  var ring = document.getElementById('cring');
+  var mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', function(e) {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  var hoverEls = document.querySelectorAll('a,button,.lcard,.dcard,.kpi');
+  hoverEls.forEach(function(el) {
+    el.addEventListener('mouseenter', function() { ring.style.transform = 'translate(-50%,-50%) scale(1.6)'; ring.style.borderColor = 'rgba(197,160,89,0.8)'; });
+    el.addEventListener('mouseleave', function() { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'rgba(197,160,89,0.5)'; });
+  });
+
+  /* ---- NAV SCROLL ---- */
+  var navbar = document.getElementById('navbar');
+  var stbtn = document.getElementById('stbtn');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 60) { navbar.classList.add('scrolled'); stbtn.classList.add('on'); }
+    else { navbar.classList.remove('scrolled'); stbtn.classList.remove('on'); }
+  });
+
+  /* ---- HAMBURGER ---- */
+  var hamBtn = document.getElementById('hamBtn');
+  var mobMenu = document.getElementById('mobMenu');
+  hamBtn.addEventListener('click', function() {
+    var isOpen = mobMenu.classList.toggle('open');
+    var spans = hamBtn.querySelectorAll('span');
+    if (isOpen) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+    } else {
+      spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = '';
+    }
+  });
+  window.closeMob = function() {
+    mobMenu.classList.remove('open');
+    var spans = hamBtn.querySelectorAll('span');
+    spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = '';
+  };
+
+  /* ---- INTERSECTION OBSERVER ---- */
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+  /* ---- HERO COUNTERS ---- */
+  function animCount(id, target, prefix, suffix, dur) {
+    var el = document.getElementById(id);
+    var start = performance.now();
+    function tick(now) {
+      var p = Math.min((now - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var v = Math.floor(eased * target);
+      el.textContent = prefix + v.toLocaleString('es-GT') + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = prefix + target.toLocaleString('es-GT') + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+  var heroObs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      setTimeout(function() {
+        animCount('ctr-cap', 14000000, 'Q', '', 1800);
+        animCount('ctr-soc', 4, '', '', 800);
+        animCount('ctr-yr', 15, '', '+', 1000);
+      }, 400);
+      heroObs.disconnect();
+    }
+  }, { threshold: 0.3 });
+  heroObs.observe(document.getElementById('hero'));
+
+  /* ---- CANVAS CHART ---- */
+  function drawChart() {
+    var canvas = document.getElementById('cap-chart');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.offsetWidth || 400;
+    canvas.width = W; canvas.height = 260;
+    var H = 260;
+    var labels = ['Capital Pagado', 'Reservas Tecnicas', 'Fondo Conting.', 'Inversiones', 'Patrimonio'];
+    var values = [14, 8.5, 4.2, 11.3, 6.8];
+    var colors = ['#C5A059', '#1D3461', '#112240', '#2A4A7A', '#8A6B35'];
+    var maxVal = 14;
+    var pad = { l: 10, r: 10, t: 24, b: 50 };
+    var chartH = H - pad.t - pad.b;
+    var totalW = W - pad.l - pad.r;
+    var groupW = totalW / labels.length;
+    var barW = groupW * 0.5;
+    var prog = 0;
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      // grid
+      ctx.strokeStyle = 'rgba(197,160,89,0.07)'; ctx.lineWidth = 1;
+      for (var i = 0; i <= 4; i++) {
+        var gy = pad.t + (chartH / 4) * i;
+        ctx.beginPath(); ctx.moveTo(pad.l, gy); ctx.lineTo(W - pad.r, gy); ctx.stroke();
+      }
+      var eased = 1 - Math.pow(1 - prog, 3);
+      for (var j = 0; j < values.length; j++) {
+        var bh = (values[j] / maxVal) * chartH * eased;
+        var bx = pad.l + j * groupW + (groupW - barW) / 2;
+        var by = pad.t + chartH - bh;
+        var grad = ctx.createLinearGradient(bx, by, bx, by + bh);
+        grad.addColorStop(0, colors[j]);
+        grad.addColorStop(1, colors[j] + '55');
+        ctx.fillStyle = grad;
+        var r = 4;
+        ctx.beginPath();
+        ctx.moveTo(bx + r, by); ctx.lineTo(bx + barW - r, by);
+        ctx.arcTo(bx + barW, by, bx + barW, by + r, r);
+        ctx.lineTo(bx + barW, by + bh); ctx.lineTo(bx, by + bh);
+        ctx.arcTo(bx, by, bx + r, by, r);
+        ctx.closePath(); ctx.fill();
+        if (prog >= 1) {
+          ctx.fillStyle = colors[j]; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('Q' + values[j] + 'M', bx + barW / 2, by - 6);
+        }
+        ctx.fillStyle = 'rgba(200,194,184,0.6)'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+        var lp1 = labels[j].split(' ')[0];
+        var lp2 = labels[j].split(' ').slice(1).join(' ');
+        ctx.fillText(lp1, bx + barW / 2, H - pad.b + 16);
+        if (lp2) ctx.fillText(lp2, bx + barW / 2, H - pad.b + 28);
+      }
+      if (prog < 1) { prog = Math.min(prog + 0.025, 1); requestAnimationFrame(frame); }
+    }
+
+    var cObs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) { frame(); cObs.disconnect(); }
+    }, { threshold: 0.3 });
+    cObs.observe(canvas);
+  }
+  drawChart();
+  window.addEventListener('resize', drawChart);
+
+  /* ---- MODAL ---- */
+  var modals = {
+    edictos: {
+      icon: '📋', title: 'Edictos de Constituci\u00F3n',
+      sub: 'Publicaci\u00F3n Oficial \u2014 Diario de Centroam\u00E9rica',
+      body: 'Los Edictos de Constituci\u00F3n de BIANCAJO, S.A. fueron publicados en el Diario de Centroam\u00E9rica conforme a la legislaci\u00F3n guatemalteca. Este documento certifica la constituci\u00F3n legal de la sociedad ante el Registro Mercantil General de la Rep\u00FAblica. Fue protocolizado por Notario autorizado y refleja el acuerdo de los cuatro socios fundadores para constituir esta aseguradora.',
+      tags: ['Diario de Centroam\u00E9rica', 'Registro Mercantil', 'Constituci\u00F3n Legal', 'A\u00F1o 2010'],
+      download: 'https://drive.google.com/uc?export=download&id=1tk6i7Xs9fH-K2DItMQpGRsGlHCULnxzb',
+      preview:  'https://drive.google.com/file/d/1tk6i7Xs9fH-K2DItMQpGRsGlHCULnxzb/preview'
+    },
+    sib: {
+      icon: '🏦', title: 'Dictamen SIB',
+      sub: 'Superintendencia de Bancos de Guatemala',
+      body: 'La Superintendencia de Bancos de Guatemala emiti\u00F3 dictamen favorable para que BIANCAJO, S.A. opere como Aseguradora bajo la denominaci\u00F3n comercial AXIS, en cumplimiento del Decreto 25-2010 del Congreso de la Rep\u00FAblica y la Resoluci\u00F3n JM-89-2010 de la Junta Monetaria. El dictamen certifica que la entidad cumple con todos los requisitos de solvencia, capital m\u00EDnimo y estructura organizacional requeridos.',
+      tags: ['SIB Guatemala', 'Resoluci\u00F3n JM-89-2010', 'Decreto 25-2010', 'Autorizaci\u00F3n Oficial'],
+      download: 'https://drive.google.com/uc?export=download&id=1W-eqH2aG5VwTiXHqGYbirlrinqcf83Lu',
+      preview:  'https://drive.google.com/file/d/1W-eqH2aG5VwTiXHqGYbirlrinqcf83Lu/preview'
+    },
+    patente: {
+      icon: '📜', title: 'Patente de Comercio',
+      sub: 'Registro Mercantil \u2014 Rep\u00FAblica de Guatemala',
+      body: 'BIANCAJO, S.A. posee Patente de Empresa y Patente de Sociedad debidamente emitidas por el Registro Mercantil General de la Rep\u00FAblica de Guatemala. Estos documentos habilitan a la sociedad para ejercer el comercio asegurador en todo el territorio nacional. La patente es renovada anualmente conforme al C\u00F3digo de Comercio.',
+      tags: ['Registro Mercantil', 'Patente de Empresa', 'Patente de Sociedad', 'C\u00F3digo de Comercio'],
+      download: 'https://drive.google.com/uc?export=download&id=1oyCx3fYFt8SYFBOGmSMQo-yZIYAaLNra',
+      preview:  'https://drive.google.com/file/d/1oyCx3fYFt8SYFBOGmSMQo-yZIYAaLNra/preview'
+    }
+  };
+
+  window.openModal = function(type) {
+    var d = modals[type];
+    if (!d) return;
+    document.getElementById('m-icon').textContent = d.icon;
+    document.getElementById('m-title').textContent = d.title;
+    document.getElementById('m-sub').textContent = d.sub;
+    document.getElementById('m-body').textContent = d.body;
+    var tagsEl = document.getElementById('m-tags');
+    tagsEl.innerHTML = '';
+    d.tags.forEach(function(t) {
+      var sp = document.createElement('span');
+      sp.className = 'mtag'; sp.textContent = t;
+      tagsEl.appendChild(sp);
+    });
+    document.getElementById('m-download').href = d.download;
+    document.getElementById('m-preview').href = d.preview;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeModal = function() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === e.currentTarget) window.closeModal();
+  });
+
+  /* ---- SIMULATOR ---- */
+  var RATES    = { danos: 0.025, vida: 0.018, autos: 0.038 };
+  var DISCS    = { '1': 0, '2': 0.05, '3': 0.10, '5': 0.15 };
+  var NAMES    = { danos: 'Seguro de Da\u00F1os', vida: 'Seguro de Vida', autos: 'Seguro de Autom\u00F3viles' };
+
+  function getEl(id) { return document.getElementById(id); }
+
+  window.vf = function(field) {
+    var fg = getEl('fg-' + field);
+    var inp = getEl('f-' + field);
+    var val = inp.value.trim();
+    var valid = false;
+    if (field === 'nombre') valid = val.length >= 5;
+    else if (field === 'dpi') valid = val.replace(/\D/g, '').length >= 8;
+    else if (field === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    else if (field === 'tipo') valid = val !== '';
+    else if (field === 'valor') valid = parseFloat(val) >= 1000;
+    fg.classList.toggle('err', val.length > 0 && !valid);
+    fg.classList.toggle('ok', val.length > 0 && valid);
+    var filled = ['nombre','dpi','email','tipo','valor'].filter(function(f) {
+      return getEl('f-' + f).value.trim().length > 0;
+    }).length;
+    ['ps1','ps2','ps3'].forEach(function(id, i) {
+      getEl(id).classList.toggle('on', filled > i * 1.5);
+    });
+    return valid;
+  };
+
+  function fmt(n) { return n.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  window.runSim = function() {
+    var fields = ['nombre','dpi','email','tipo','valor'];
+    var allOk = true;
+    fields.forEach(function(f) { if (!window.vf(f)) allOk = false; });
+    fields.forEach(function(f) {
+      if (!getEl('f-' + f).value.trim()) {
+        getEl('fg-' + f).classList.add('err');
+        allOk = false;
+      }
+    });
+    if (!allOk) return;
+
+    var tipo   = getEl('f-tipo').value;
+    var valor  = parseFloat(getEl('f-valor').value);
+    var plazo  = getEl('f-plazo').value;
+    var nombre = getEl('f-nombre').value.trim();
+
+    var rate       = RATES[tipo];
+    var disc       = DISCS[plazo];
+    var primaBruta = valor * rate * parseInt(plazo);
+    var descuento  = primaBruta * disc;
+    var primaFinal = primaBruta - descuento;
+
+    /* Seguro de Vida EXENTO de IVA — Decreto 27-92 Art. 7 num. 7 */
+    var esVida = (tipo === 'vida');
+    var iva    = esVida ? 0 : primaFinal * 0.12;
+    var total  = primaFinal + iva;
+
+    var txId = 'AXIS-' + Date.now() + '-' + Math.random().toString(36).substr(2,6).toUpperCase();
+    var now  = new Date();
+    var fecha = now.toLocaleDateString('es-GT', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    var ivaLine = esVida
+      ? '<div class="rrow"><span class="rl">IVA</span><span class="rv" style="color:#6EE86E">Exento \u2014 Decreto 27-92 Art. 7</span></div>'
+      : '<div class="rrow"><span class="rl">IVA (12%)</span><span class="rv">Q' + fmt(iva) + '</span></div>';
+
+    var discLine = descuento > 0
+      ? '<div class="rrow"><span class="rl">Descuento (' + (disc * 100) + '%)</span><span class="rv" style="color:#6EE86E">&minus;Q' + fmt(descuento) + '</span></div>'
+      : '';
+
+    getEl('r-body').innerHTML =
+      '<div class="rrow"><span class="rl">Asegurado</span><span class="rv">' + nombre + '</span></div>' +
+      '<div class="rrow"><span class="rl">Tipo de P\u00F3liza</span><span class="rv">' + NAMES[tipo] + '</span></div>' +
+      '<div class="rrow"><span class="rl">Valor Asegurado</span><span class="rv">Q' + fmt(valor) + '</span></div>' +
+      '<div class="rrow"><span class="rl">Plazo</span><span class="rv">' + plazo + ' a\u00F1o(s)</span></div>' +
+      '<div class="rrow"><span class="rl">Prima Bruta</span><span class="rv">Q' + fmt(primaBruta) + '</span></div>' +
+      discLine +
+      ivaLine +
+      '<div class="rrow tot"><span class="rl">PRIMA TOTAL ESTIMADA</span><span class="rv">Q' + fmt(total) + '</span></div>' +
+      '<div class="rrow"><span class="rl">Fecha de Cotizaci\u00F3n</span><span class="rv">' + fecha + '</span></div>';
+
+    getEl('r-txid').textContent = txId;
+    getEl('rph').style.display = 'none';
+    var rec = getEl('receipt');
+    rec.style.display = 'block';
+    rec.style.animation = 'none';
+    void rec.offsetWidth; /* reflow to restart animation */
+    rec.style.animation = 'fadeUp 0.5s ease forwards';
+
+    if (window.innerWidth < 768) rec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  window.resetSim = function() {
+    getEl('receipt').style.display = 'none';
+    getEl('rph').style.display = 'flex';
+    ['nombre','dpi','email','valor'].forEach(function(f) {
+      getEl('f-' + f).value = '';
+      getEl('fg-' + f).classList.remove('err','ok');
+    });
+    getEl('f-tipo').value = '';
+    getEl('fg-tipo').classList.remove('err','ok');
+    getEl('f-plazo').value = '1';
+    ['ps1','ps2','ps3'].forEach(function(id, i) { getEl(id).classList.toggle('on', i === 0); });
+  };
+
+  /* ---- POLIZAS TABS ---- */
+  window.switchTab = function(tabId) {
+    document.querySelectorAll('.ppanel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.ptab').forEach(function(b) { b.classList.remove('active'); });
+    var panel = document.getElementById(tabId);
+    if (panel) panel.classList.add('active');
+    var idx = ['polizas-tab','tarifas-tab','tc-tab'].indexOf(tabId);
+    var tabs = document.querySelectorAll('.ptab');
+    if (tabs[idx]) tabs[idx].classList.add('active');
+    if (panel) {
+      panel.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+        setTimeout(function() { el.classList.add('visible'); }, 50);
+      });
+    }
+  };
+
+  /* ---- T&C SIDEBAR TABS ---- */
+  window.switchTC = function(panelId) {
+    document.querySelectorAll('.tc-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tc-nav-item').forEach(function(b) { b.classList.remove('active'); });
+    var panel = document.getElementById(panelId);
+    if (panel) panel.classList.add('active');
+    var idx = ['tc-danos','tc-vida','tc-autos'].indexOf(panelId);
+    var items = document.querySelectorAll('.tc-nav-item');
+    if (items[idx]) items[idx].classList.add('active');
+  };
+
+  /* ---- EASTER EGG: RICK ASTLEY ---- */
+  var eggOverlay = document.createElement('div');
+  eggOverlay.id = 'egg-overlay';
+  eggOverlay.innerHTML =
+    '<div id="egg-box">' +
+      '<button id="egg-close" onclick="closeEgg()">&#10005;</button>' +
+      '<div id="egg-label">&#127881; &nbsp;Gracias por contactarnos&nbsp; &#127881;</div>' +
+      '<div id="egg-thumb" onclick="window.open(\'https://www.youtube.com/watch?v=dQw4w9WgXcQ\',\'_blank\')">' +
+        '<img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Rick Astley">' +
+        '<div id="egg-play">&#9654;</div>' +
+        '<div id="egg-hint">Haz clic para reproducir en YouTube</div>' +
+      '</div>' +
+      '<div id="egg-msg">Nuestro equipo se pondr\u00E1 en contacto contigo muy pronto &#128526;</div>' +
+    '</div>';
+  document.body.appendChild(eggOverlay);
+
+  window.openEgg = function() {
+    eggOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    /* Also open YouTube immediately in new tab */
+    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+  };
+  window.closeEgg = function() {
+    eggOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  eggOverlay.addEventListener('click', function(e) {
+    if (e.target === eggOverlay) window.closeEgg();
+  });
+
+  /* Intercept all footer contact links */
+  document.querySelectorAll('.ft-links a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.openEgg();
+    });
+  });
+
+}());
+</script>
+</body>
+</html>
